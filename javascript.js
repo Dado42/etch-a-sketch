@@ -1,18 +1,40 @@
-const grid = document.querySelector('#grid');
-grid.style.width = '600px';
-grid.style.height = '600px';
-grid.style.gridTemplateColumns = 'repeat(16, 1fr)';
-grid.style.gridTemplateRows = 'repeat(16, 1fr)';
+const body = document.querySelector('body');
 
-for (let i = 0; i < 256; i++){
-    const box = document.createElement('div');
-    box.style.borderStyle = 'solid';
-    box.style.borderWidth = '1px';
-    box.addEventListener('mouseover', function() {ColorBox(box, 'black')});
+const sizeButton = document.querySelector('#size');
+sizeButton.addEventListener('click', function() {PromptForSize()});
 
-    grid.appendChild(box);
-}
+let grid = document.querySelector('#grid');
+
+ChangeGridSize(16);
 
 function ColorBox(box, color){
     box.style.backgroundColor = color;
+}
+
+function PromptForSize() {
+    let size = prompt("Set grid size between 1 and 100");
+    if (size == null || isNaN(size) || size < 0 || size > 100){
+        return;
+    }
+
+    ChangeGridSize(size);
+}
+
+function ChangeGridSize(size) {
+    grid.remove();
+
+    grid = document.createElement('div');
+    grid.setAttribute('id', 'grid');
+    grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+
+    let numSquares = size*size;
+    for (let i = 0; i < numSquares; i++){
+        const box = document.createElement('div');
+        box.addEventListener('mouseover', function() {ColorBox(box, 'black')});
+
+        grid.appendChild(box);
+    }
+
+    body.appendChild(grid);
 }
